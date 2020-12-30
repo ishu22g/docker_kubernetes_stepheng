@@ -1,0 +1,55 @@
+docker-compose up --build
+docker-compose down
+
+
+npx create-react-app frontend
+
+docker build -f Dockerfile.dev .
+
+// For frontend
+docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app 9d0162e0774f
+
+
+minikube status
+
+kubectl cluster-info
+
+kubectl apply -f client-pod.yml
+
+kubectl get pods
+
+kubectl get services
+
+minikube ip
+
+kubectl describe pod
+
+kubectl describe pod client-pod
+
+kubectl delete -f client-pod.yml
+
+kubectl get deployments
+
+kubectl get pods -o wide
+
+minikube node add
+
+kubectl set image Deployment/client-pod client(container_name)=stephengrider/multi-client:v5
+
+eval $(minikube -p minikube docker-env)
+
+kubectl create secret generic pgpassword --from-literal PGPASSWORD=postgres_password
+
+minikube addons enable ingress #might need to do additional config for mac/windows
+
+minikube dashboard
+minikube dashboard --url
+kubectl proxy --address='0.0.0.0' --disable-filter=true
+
+docker run -it -v $(pwd):/app ruby:2.4 bash
+gem install travis
+travis login --github-token 821f12efc6fd5e0e0ea63d28342c141650187fb4 --pro
+
+travis encrypt-file service-account.json -r  ishu22g/multi-k8s --pro
+
+### REMEMBER: to setup secret on remote (gcp) kubernetes instance

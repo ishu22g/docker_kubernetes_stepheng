@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+language: generic
+
+before_install:
+  - docker build -t kt/docker-react -f Dockerfile.dev .
+
+script:
+    - docker run -e CI=true kt/docker-react npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker-react"
+  env: "DockerReact-env"
+  bucket_name: "elasticbeanstalk-us-east-1-139290917076"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $aws_access_key_id
+  secret_access_key: "$aws_secret_access_key"

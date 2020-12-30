@@ -1,0 +1,37 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t ishu22g/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true ishu22g/react-test npm test
+
+after_success:
+  - docker build -t ishu22g/multi-client ./client
+  - docker build -t ishu22g/multi-nginx ./nginx
+  - docker build -t ishu22g/multi-server ./server
+  - docker build -t ishu22g/multi-worker ./worker
+  #login docker cli 
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  #push images to dockerhub
+  - docker push ishu22g/multi-client
+  - docker push ishu22g/multi-nginx
+  - docker push ishu22g/multi-server
+  - docker push ishu22g/multi-worker
+
+deploy:
+  edge: true
+  # only_create_app_version: true
+  provider: "elasticbeanstalk"
+  region: "us-east-1"
+  app: "multi-docker"
+  env: "MultiDocker-env"
+  bucket_name: "elasticbeanstalk-us-east-1-139290917076"
+  bucket_path: "multi-docker"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"
